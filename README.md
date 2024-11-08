@@ -10,7 +10,7 @@ A project template with Devbox + DevContainer + DinD + Minikube configurations.
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-Or, you can use the [GitHub Codespaces](https://github.com/codespaces) instead of Visual Studio Code running on your local machine.
+Or, you may use the [GitHub Codespaces](https://github.com/codespaces) instead of Visual Studio Code running on your local machine.
 
 ### Adding new dependencies to the development environment
 
