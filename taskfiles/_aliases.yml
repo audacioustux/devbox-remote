@@ -1,0 +1,21 @@
+version: "3"
+
+tasks:  
+  devbox:*: 
+    vars:
+      COMMAND: '{{index .MATCH 0}}'
+    cmd: devbox {{.COMMAND}} {{.CLI_ARGS}}
+  docker:clean:
+    desc: Clean up docker environment
+    cmds:
+      - docker stop $(docker ps -aq) || true
+      - docker container prune -f
+      - docker volume prune -af
+      - docker image prune -af --filter until=750h 
+      - docker builder prune -af --filter until=750h --keep-storage 1G
+  git:clean:
+    desc: Remove all untracked files and directories except .env files
+    cmd: git clean -Xdf --exclude='!**/*.env'
+  devbox:clean:
+    desc: Clean up nix environment
+    cmd: devbox run -- nix store gc --extra-experimental-features nix-command

@@ -1,0 +1,18 @@
+version: "3"
+
+dotenv: [".env.local", ".env"]
+
+includes:
+  aliases:
+    taskfile: taskfiles/_aliases.yml
+    flatten: true
+  env: 
+    taskfile: taskfiles/_env.yml
+  k8s:
+    taskfile: taskfiles/_k8s.yml
+
+tasks:
+  default:
+    desc: Show all available tasks
+    cmd: task --list-all
+

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.5/.schema/devbox.schema.json",
+  "packages": [
+    "ripgrep@latest",
+    "cloc@latest",
+    "go-task@latest",
+    "zoxide@latest",
+    "moreutils@latest",
+    "fzf@latest",
+    "httpie@latest",
+    "bat@latest",
+    "inotify-tools@latest",
+    "jq@latest",
+    "rustup@latest",
+    "kubernetes-helm@latest",
+    "kubectl@latest",
+    "k9s@latest",
+    "unzip@latest",
+    "curl@latest",
+    "coreutils@latest",
+    "ncurses@latest",
+    "perl@latest",
+    "openssl@latest",
+    "autoconf@latest",
+    "git@latest",
+    "elixir@latest",
+    "nodejs@latest",
+    "flyctl@latest",
+    "minikube@latest",
+    "neovim@latest",
+    "docker-client@latest",
+    "github:audacioustux/bashlets",
+    "iputils@latest",
+    "cilium-cli@latest"
+  ],
+  "env": {
+    "LANG": "C.UTF-8"
+  },
+  "shell": {
+    "init_hook": [],
+    "scripts": {}
+  }
+}

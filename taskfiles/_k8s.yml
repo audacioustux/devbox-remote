@@ -1,0 +1,25 @@
+version: "3"
+
+env:
+  MINIKUBE_HOME: .k8s/minikube
+  MINIKUBE_CONFIG: >-
+    --driver=docker
+    --memory=no-limit
+    --cpus=no-limit
+    --interactive=false
+    --wait=all
+    --cni=false
+  KUBECONFIG: .k8s/config
+
+tasks:
+  init:
+    desc: Initialize local Kubernetes cluster
+    cmds:
+        - minikube start ${MINIKUBE_CONFIG} --download-only
+
+  up:
+    desc: Start local Kubernetes cluster
+    cmds:
+        - defer: minikube stop
+        - minikube start ${MINIKUBE_CONFIG}
+        - minikube tunnel --bind-address 0.0.0.0

@@ -1,0 +1,17 @@
+FROM jetpackio/devbox:latest
+
+VOLUME /nix
+
+ENV LANG="C.UTF-8"
+
+WORKDIR /code
+USER root:root
+RUN mkdir -p /code && chown ${DEVBOX_USER}:${DEVBOX_USER} /code
+USER ${DEVBOX_USER}:${DEVBOX_USER}
+COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.json
+COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.lock devbox.lock
+
+
+RUN devbox run -- echo "Installed Packages."
+
+RUN devbox shellenv --init-hook >> ~/.profile

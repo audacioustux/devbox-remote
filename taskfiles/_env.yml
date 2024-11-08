@@ -1,0 +1,49 @@
+version: "3"
+
+tasks:
+  init:
+    desc: Initialize development environment
+    deps:
+      - task: reset
+    cmds:
+      - task: :devbox:install
+      - task: init:tasks
+  reset:
+    internal: true
+    desc: Remove all stateful data to a clean state
+    cmds:
+      - task: :docker:clean
+      - task: :git:clean
+      - task: :devbox:clean
+  init:tasks:
+    internal: true
+    deps:
+      - task: install
+      - task: preload
+  preload:
+    internal: true
+    desc: Preload / Cache dependencies
+    deps:
+      - task: :k8s:preload
+  install:
+    internal: true
+    desc: Install environment dependencies
+    deps:
+      - task: install:bins:bashlet
+      - task: install:bins:cargo
+  install:bins:bashlet:
+    internal: true
+    cmd: bashlet install util/ebort
+  install:bins:cargo:
+    internal: true
+    cmd: cargo install cargo-watch
+
+  update:
+    desc: Update development environment
+    deps:
+      - task: :devbox:update
+    cmds:
+      - task: update:build
+  update:build:
+    internal: true
+    deps:

@@ -1,0 +1,4 @@
+*.env
+
+/.devbox
+/.k8s

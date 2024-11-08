@@ -1,0 +1,45 @@
+services:
+  devbox:
+    build: .
+    volumes:
+      - ../:/workspace:delegated,rw
+      - docker-certs-client:/certs/client:ro
+      - nix:/nix:delegated
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: 1
+      DOCKER_CERT_PATH: /certs/client
+    command: sleep infinity
+    depends_on:
+      docker:
+        condition: service_healthy
+        restart: true
+    networks:
+      - devcontainer
+
+  docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+      DOCKER_DRIVER: overlay2
+    healthcheck:
+      test: [ "CMD", "docker", "info" ]
+      start_period: 30s
+    volumes:
+      - ../:/workspace:cached,ro
+      - docker:/var/lib/docker
+      - docker-certs-ca:/certs/ca
+      - docker-certs-client:/certs/client
+    networks:
+      - devcontainer
+
+volumes:
+  nix:
+  docker:
+  docker-certs-ca:
+  docker-certs-client:
+
+
+networks:
+  devcontainer:
