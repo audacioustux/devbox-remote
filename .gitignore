@@ -2,3 +2,7 @@
 
 /.devbox
 /.k8s
+/.nix-*
+
+/target
+/tmp

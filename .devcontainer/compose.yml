@@ -2,43 +2,47 @@ services:
   devbox:
     build: .
     volumes:
-      - ../:/workspace:delegated,rw
-      - docker-certs-client:/certs/client:ro
-      - nix:/nix:delegated
+      - ../..:/workspaces:cached,rw
+      - docker-certs:/certs:ro
+      - nix-store:/nix/store
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
     environment:
       DOCKER_HOST: tcp://docker:2376
       DOCKER_TLS_VERIFY: 1
       DOCKER_CERT_PATH: /certs/client
-    command: sleep infinity
     depends_on:
       docker:
         condition: service_healthy
-        restart: true
     networks:
       - devcontainer
 
   docker:
     image: docker:dind
+    restart: unless-stopped
+    entrypoint: [ "sh", "-c" ]
+    command:
+      - |
+        rm -f /var/run/docker.pid /var/run/docker/containerd/containerd.pid
+        dockerd-entrypoint.sh
     privileged: true
+    volumes:
+      - docker-certs:/certs
+      - docker-storage:/var/lib/docker
     environment:
       DOCKER_TLS_CERTDIR: /certs
-      DOCKER_DRIVER: overlay2
     healthcheck:
       test: [ "CMD", "docker", "info" ]
-      start_period: 30s
-    volumes:
-      - ../:/workspace:cached,ro
-      - docker:/var/lib/docker
-      - docker-certs-ca:/certs/ca
-      - docker-certs-client:/certs/client
+      start_period: 60s
     networks:
       - devcontainer
 
 volumes:
-  nix:
-  docker:
-  docker-certs-ca:
-  docker-certs-client:
+  docker-certs:
+  docker-storage:
+  nix-store:
 
 
 networks:

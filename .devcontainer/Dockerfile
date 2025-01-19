@@ -1,17 +1,20 @@
 FROM jetpackio/devbox:latest
 
-VOLUME /nix
-
-ENV LANG="C.UTF-8"
-
-WORKDIR /code
 USER root:root
-RUN mkdir -p /code && chown ${DEVBOX_USER}:${DEVBOX_USER} /code
+
+RUN apt-get update -y && \
+    apt-get install -y zsh
+
+# Set zsh as default shell
+RUN chsh -s "$(which zsh)" ${DEVBOX_USER:?}
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 USER ${DEVBOX_USER}:${DEVBOX_USER}
-COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.json devbox.json
-COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.lock devbox.lock
 
+RUN mkdir -p ~/.config/nix && cat <<EOF >> ~/.config/nix/nix.conf
+download-buffer-size = 536870912 # 512MB
+auto-optimise-store = true
+EOF
 
-RUN devbox run -- echo "Installed Packages."
-
-RUN devbox shellenv --init-hook >> ~/.profile
+CMD sleep infinity

@@ -1,49 +1,57 @@
 {
-    "name": "Devbox Remote Container",
-    "dockerComposeFile": "compose.yml",
-    "service": "devbox",
-    "remoteUser": "devbox",
-    "workspaceFolder": "/workspace",
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "git.autofetch": true,
-                "files.autoSave": "onFocusChange",
-                "editor.formatOnSave": true,
-                "editor.formatOnPaste": true,
-                "resmon.show.cpufreq": false,
-                "devbox.autoShellOnTerminal": true,
-                "emmet.includeLanguages": {
-                    "phoenix-heex": "html"
-                },
-                "[phoenix-heex]": {
-                    "editor.defaultFoldingRangeProvider": "vscode.html-language-features"
-                },
-                "tailwindCSS.includeLanguages": {
-                    "elixir": "html",
-                    "phoenix-heex": "html"
-                },
-                "elixirLS.projectDir": "anydrop",
-                "files.associations": {
-                    "devbox.json": "jsonc"
-                }
-            },
-            "extensions": [
-                "jetpack-io.devbox",
-                "mutantdino.resourcemonitor",
-                "Gruntfuggly.todo-tree",
-                "JakeBecker.elixir-ls",
-                "phoenixframework.phoenix",
-                "bradlc.vscode-tailwindcss",
-                "samuel-pordeus.elixir-test",
-                "GitHub.copilot",
-                "fill-labs.dependi",
-                "ms-azuretools.vscode-docker",
-                "tamasfe.even-better-toml",
-                "rust-lang.rust-analyzer"
-            ]
-        }
-    },
-    "onCreateCommand": "devbox run 'task env:init'",
-    "updateContentCommand": "devbox run 'task env:update'"
+  "name": "Devbox Remote Container",
+  "dockerComposeFile": "compose.yml",
+  "service": "devbox",
+  "remoteUser": "devbox",
+  "containerEnv": {
+    "WORKSPACE_FOLDER": "${containerWorkspaceFolder}",
+    "ZDOTDIR": "${containerWorkspaceFolder}/.devcontainer/zsh"
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.autofetch": true,
+        "files.autoSave": "onFocusChange",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "resmon.show.cpufreq": false,
+        "devbox.autoShellOnTerminal": false,
+        "emmet.includeLanguages": {
+          "phoenix-heex": "html"
+        },
+        "[phoenix-heex]": {
+          "editor.defaultFoldingRangeProvider": "vscode.html-language-features"
+        },
+        "tailwindCSS.includeLanguages": {
+          "elixir": "html",
+          "phoenix-heex": "html"
+        },
+        "elixirLS.projectDir": "anydrop",
+        "files.associations": {
+          "devbox.json": "jsonc"
+        },
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.checkOnSave": true
+      },
+      "extensions": [
+        "jetpack-io.devbox",
+        "mutantdino.resourcemonitor",
+        "Gruntfuggly.todo-tree",
+        "JakeBecker.elixir-ls",
+        "phoenixframework.phoenix",
+        "bradlc.vscode-tailwindcss",
+        "samuel-pordeus.elixir-test",
+        "GitHub.copilot",
+        "fill-labs.dependi",
+        "ms-azuretools.vscode-docker",
+        "tamasfe.even-better-toml",
+        "rust-lang.rust-analyzer",
+        "sleistner.vscode-fileutils",
+        "DavidAnson.vscode-markdownlint"
+      ]
+    }
+  },
+  "onCreateCommand": "TERM=dumb zsh -i -c 'task env:init'",
+  "updateContentCommand": "TERM=dumb zsh -i -c 'task env:update'"
 }

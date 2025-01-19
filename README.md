@@ -1,6 +1,6 @@
-# devbox-remote
+# devtopia
 
-A project template with Devbox + DevContainer + DinD + Minikube configurations.
+A generic development environment for remote development.
 
 ## Developer Guide
 

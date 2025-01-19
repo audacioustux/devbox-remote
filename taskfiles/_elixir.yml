@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  mix:*:
+    desc: Run the given mix command
+    vars:
+      COMMAND: '{{index .MATCH 0}}'
+    cmd: mix {{.COMMAND}} {{.CLI_ARGS}}
+
+  iex:*:
+    desc: Start IEx with the given mix command
+    vars:
+      COMMAND: '{{index .MATCH 0}}'
+    cmd: iex -S mix {{.COMMAND}} {{.CLI_ARGS}}

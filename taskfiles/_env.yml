@@ -4,46 +4,42 @@ tasks:
   init:
     desc: Initialize development environment
     deps:
-      - task: reset
+      - task: install:_
     cmds:
-      - task: :devbox:install
-      - task: init:tasks
-  reset:
-    internal: true
-    desc: Remove all stateful data to a clean state
-    cmds:
-      - task: :docker:clean
-      - task: :git:clean
-      - task: :devbox:clean
-  init:tasks:
-    internal: true
+      - task: install:_:pkgs
+      - task: configure:_
+
+  install:_:
     deps:
-      - task: install
-      - task: preload
-  preload:
-    internal: true
-    desc: Preload / Cache dependencies
+      - task: install:cargo
+      - task: install:mix
+  install:cargo: rustup update
+  install:mix:
     deps:
-      - task: :k8s:preload
-  install:
-    internal: true
-    desc: Install environment dependencies
+      - task: install:mix:rebar
+      - task: install:mix:hex
+  install:mix:rebar: mix local.rebar --force rebar3 $(which rebar3)
+  install:mix:hex: mix archive.install --force github hexpm/hex branch latest
+
+  install:_:pkgs:
     deps:
-      - task: install:bins:bashlet
-      - task: install:bins:cargo
-  install:bins:bashlet:
-    internal: true
-    cmd: bashlet install util/ebort
-  install:bins:cargo:
-    internal: true
-    cmd: cargo install cargo-watch
+      - task: install:mix:pkgs
+      - task: install:bashlet:pkgs
+      - task: install:cargo:pkgs
+  install:mix:pkgs: mix archive.install --force hex phx_new
+  install:bashlet:pkgs: bashlet install util/ebort
+  install:cargo:pkgs: cargo install cargo-watch
+
+  configure:_:
+    desc: Configure development tools
+    deps:
+      - task: configure:pre-commit
+      - task: configure:gh
+  configure:pre-commit: pre-commit install
+  configure:gh: sudo ln -snf $(which gh) /usr/bin/gh
 
   update:
-    desc: Update development environment
+    desc: Update dependencies and build artifacts
+    ignore_error: true
     deps:
-      - task: :devbox:update
-    cmds:
-      - task: update:build
-  update:build:
-    internal: true
-    deps:
+      - task: :cargo:build
