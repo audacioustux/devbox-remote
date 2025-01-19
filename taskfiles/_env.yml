@@ -41,5 +41,5 @@ tasks:
   update:
     desc: Update dependencies and build artifacts
     ignore_error: true
-    deps:
+    cmds:
       - task: :cargo:build
